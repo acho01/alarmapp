@@ -12,6 +12,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="110dp">
 
+        <View
+            android:id="@+id/headerBack"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/themeView"
             android:layout_width="wrap_content"
@@ -26,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/addView"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="16dp"
@@ -38,4 +46,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import com.asharashenidze.alarmapp.presenter.MainPresenter
 import com.asharashenidze.alarmapp.utils.Theme
 import com.asharashenidze.alarmapp.view.IMainView
 
@@ -17,7 +18,9 @@ class MainActivity : AppCompatActivity(), IMainView {
 
     private lateinit var themeView: TextView
 
-    private var currentTheme = Theme.LIGHT
+    private lateinit var headerView: View
+
+    private lateinit var presenter: MainPresenter
 
     private var TO_DARK = "Switch to dark"
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity(), IMainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        presenter = MainPresenter(this)
 
         initTheme()
 
@@ -36,21 +40,26 @@ class MainActivity : AppCompatActivity(), IMainView {
         themeView = findViewById<Button>(R.id.themeView)
         themeView.text = TO_DARK
 
+        updateView(false)
+
         themeView.setOnClickListener {
-            updateView(currentTheme)
+            presenter.updateTheme()
         }
     }
 
-    override fun updateView(view: Theme) {
-        val toDark = currentTheme == Theme.LIGHT
+    override fun updateView(toDark: Boolean) {
+        val headerColor = if (toDark) getResources().getColor(R.color.light_black) else getResources().getColor(R.color.dark_white)
+
+        headerView = findViewById<View>(R.id.headerBack)
+        headerView.setBackgroundColor(headerColor)
 
         if (toDark) {
-            currentTheme = Theme.DARK
             themeView.text = TO_LIGHT
         } else {
-            currentTheme = Theme.LIGHT
             themeView.text = TO_DARK
         }
+
+        headerView.setBackgroundColor(headerColor)
 
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         recursiveLoopChildren(toDark, view)
