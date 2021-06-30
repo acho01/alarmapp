@@ -10,11 +10,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.asharashenidze.alarmapp.presenter.MainPresenter
 import com.asharashenidze.alarmapp.utils.Theme
 import com.asharashenidze.alarmapp.view.IMainView
+import com.asharashenidze.alarmapp.view.RecyclerAdapter
 
 class MainActivity : AppCompatActivity(), IMainView {
+
+    private var layoutManager: RecyclerView.LayoutManager? = null;
+    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
+
+
 
     private lateinit var themeView: TextView
 
@@ -29,6 +37,13 @@ class MainActivity : AppCompatActivity(), IMainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        layoutManager = LinearLayoutManager(this)
+        var recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = layoutManager
+
+        adapter = RecyclerAdapter()
+        recyclerView.adapter = adapter
 
         presenter = MainPresenter(this)
 
