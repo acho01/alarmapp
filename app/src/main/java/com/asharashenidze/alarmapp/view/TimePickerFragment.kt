@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import com.asharashenidze.alarmapp.model.Alarm
 import com.asharashenidze.alarmapp.presenter.IMainPresenter
 import java.util.*
 
@@ -20,10 +21,8 @@ class TimePickerFragment(var presenter: IMainPresenter, var adapter: RecyclerAda
         }
 
         override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-            var hour = if (hourOfDay < 10) "0$hourOfDay" else (hourOfDay)
-            var min = if (minute < 10) "0$minute" else (minute)
 
-            presenter.addAlarm("$hour:$min")
+            presenter.addAlarm(Alarm(hourOfDay, minute, true))
             adapter?.setData(presenter.getAlarms())
         }
     }

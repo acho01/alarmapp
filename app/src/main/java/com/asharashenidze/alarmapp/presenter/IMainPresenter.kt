@@ -1,7 +1,10 @@
 package com.asharashenidze.alarmapp.presenter
 
+import com.asharashenidze.alarmapp.model.Alarm
+
 interface IMainPresenter {
-    abstract fun updateTheme()
-    abstract fun addAlarm(s: String)
-    abstract fun getAlarms(): List<String>
+    fun updateTheme()
+    fun addAlarm(alarm: Alarm)
+    fun getAlarms(): List<Alarm>
+    fun switchAlarmOnIndex(i: Int)
 }

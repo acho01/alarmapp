@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), IMainView {
         recyclerView.layoutManager = layoutManager
 
         presenter = MainPresenter(this)
-        adapter = RecyclerAdapter(presenter.getAlarms())
+        adapter = RecyclerAdapter(presenter.getAlarms(), presenter)
         recyclerView.adapter = adapter
 
 

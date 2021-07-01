@@ -1,5 +1,6 @@
 package com.asharashenidze.alarmapp.presenter
 
+import com.asharashenidze.alarmapp.model.Alarm
 import com.asharashenidze.alarmapp.model.MainInteractor
 import com.asharashenidze.alarmapp.utils.Theme
 import com.asharashenidze.alarmapp.view.IMainView
@@ -14,12 +15,16 @@ class MainPresenter(var view: IMainView?) : IMainPresenter{
         view?.updateView(getCurrentTheme() == Theme.LIGHT)
     }
 
-    override fun addAlarm(s: String) {
-        interactor.addAlarm(s)
+    override fun addAlarm(alarm: Alarm) {
+        interactor.addAlarm(alarm)
     }
 
-    override fun getAlarms(): List<String> {
+    override fun getAlarms(): List<Alarm> {
         return interactor.getAlarmList()
+    }
+
+    override fun switchAlarmOnIndex(i: Int) {
+        interactor.switchAlarm(i)
     }
 
 

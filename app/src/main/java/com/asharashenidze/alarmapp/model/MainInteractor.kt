@@ -7,7 +7,7 @@ class MainInteractor(val presenter: IMainPresenter) {
 
     private var currentTheme: Theme? = null
 
-    private var alarmList: List<String> = mutableListOf("11:22")
+    private var alarmList: List<Alarm> = mutableListOf(Alarm(12, 23, true))
 
     fun getCurrentTheme(): Theme? {
         return currentTheme
@@ -17,11 +17,15 @@ class MainInteractor(val presenter: IMainPresenter) {
         currentTheme = theme
     }
 
-    fun getAlarmList(): List<String> {
+    fun getAlarmList(): List<Alarm> {
         return alarmList
     }
 
-    fun addAlarm(alarm: String) {
+    fun addAlarm(alarm: Alarm) {
         alarmList += alarm
+    }
+
+    fun switchAlarm(index: Int) {
+        alarmList[index].isOn = !alarmList[index].isOn
     }
 }

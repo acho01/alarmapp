@@ -7,8 +7,10 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asharashenidze.alarmapp.R
+import com.asharashenidze.alarmapp.model.Alarm
+import com.asharashenidze.alarmapp.presenter.MainPresenter
 
-class RecyclerAdapter(var alarmList: List<String>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(var alarmList: List<Alarm>, var presenter: MainPresenter): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.card, parent, false)
@@ -20,8 +22,21 @@ class RecyclerAdapter(var alarmList: List<String>): RecyclerView.Adapter<Recycle
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
-        holder.itemTime.text = alarmList[position]
+        var alarm = alarmList[position]
+        var hour = if (alarm.hour < 10) "0${alarm.hour}" else (alarm.hour)
+        var min = if (alarm.minute < 10) "0$alarm.minute" else (alarm.minute)
 
+        holder.itemTime.text = "${hour}:${min}"
+        holder.itemSwitch.isChecked = alarm.isOn
+
+        holder.itemSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            presenter.switchAlarmOnIndex(position)
+            if (isChecked) {
+                println("OOOOOOOOOOOOOON" + position)
+            } else {
+                println("OOOOFFFFFF" + + position)
+            }
+        }
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -34,7 +49,7 @@ class RecyclerAdapter(var alarmList: List<String>): RecyclerView.Adapter<Recycle
         }
     }
 
-    fun setData(data: List<String>) {
+    fun setData(data: List<Alarm>) {
         alarmList = listOf()
         alarmList += data
         this.notifyDataSetChanged();
