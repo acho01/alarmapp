@@ -14,6 +14,15 @@ class MainPresenter(var view: IMainView?) : IMainPresenter{
         view?.updateView(getCurrentTheme() == Theme.LIGHT)
     }
 
+    override fun addAlarm(s: String) {
+        interactor.addAlarm(s)
+    }
+
+    override fun getAlarms(): List<String> {
+        return interactor.getAlarmList()
+    }
+
+
     private fun getCurrentTheme(): Theme? {
         return if (interactor.getCurrentTheme() == null) Theme.DARK else (interactor.getCurrentTheme())
     }

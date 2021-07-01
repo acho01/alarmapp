@@ -1,27 +1,34 @@
 package com.asharashenidze.alarmapp
 
+import android.app.Dialog
+import android.app.TimePickerDialog
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asharashenidze.alarmapp.presenter.MainPresenter
-import com.asharashenidze.alarmapp.utils.Theme
 import com.asharashenidze.alarmapp.view.IMainView
 import com.asharashenidze.alarmapp.view.RecyclerAdapter
+import com.asharashenidze.alarmapp.view.TimePickerFragment
+import java.util.*
 
 class MainActivity : AppCompatActivity(), IMainView {
 
     private var layoutManager: RecyclerView.LayoutManager? = null;
-    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
+    private var adapter: RecyclerAdapter? = null
 
+    private var times = listOf<String>("11:22", "22:23")
 
 
     private lateinit var themeView: TextView
@@ -42,13 +49,23 @@ class MainActivity : AppCompatActivity(), IMainView {
         var recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = layoutManager
 
-        adapter = RecyclerAdapter()
+        presenter = MainPresenter(this)
+        adapter = RecyclerAdapter(presenter.getAlarms())
         recyclerView.adapter = adapter
 
-        presenter = MainPresenter(this)
 
         initTheme()
+        initButton()
 
+    }
+
+
+
+    private fun initButton() {
+        val addAlarm = findViewById<ImageView>(R.id.add_alarmm)
+        addAlarm.setOnClickListener {
+            TimePickerFragment(presenter, adapter).show(supportFragmentManager, "timePicker")
+        }
     }
 
     private fun initTheme() {
