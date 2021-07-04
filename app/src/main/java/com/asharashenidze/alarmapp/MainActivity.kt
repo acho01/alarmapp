@@ -1,26 +1,31 @@
 package com.asharashenidze.alarmapp
 
-import android.app.Dialog
-import android.app.TimePickerDialog
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.TimePicker
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asharashenidze.alarmapp.presenter.MainPresenter
 import com.asharashenidze.alarmapp.view.IMainView
 import com.asharashenidze.alarmapp.view.RecyclerAdapter
 import com.asharashenidze.alarmapp.view.TimePickerFragment
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoField
 import java.util.*
 
 class MainActivity : AppCompatActivity(), IMainView {
@@ -44,12 +49,11 @@ class MainActivity : AppCompatActivity(), IMainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         layoutManager = LinearLayoutManager(this)
         var recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = layoutManager
 
-        presenter = MainPresenter(this)
+        presenter = MainPresenter(this, this)
         adapter = RecyclerAdapter(presenter.getAlarms(), presenter)
         recyclerView.adapter = adapter
 
@@ -58,7 +62,6 @@ class MainActivity : AppCompatActivity(), IMainView {
         initButton()
 
     }
-
 
 
     private fun initButton() {
@@ -98,7 +101,7 @@ class MainActivity : AppCompatActivity(), IMainView {
     }
 
     private fun recursiveLoopChildren(isDark: Boolean, parent: ViewGroup) {
-        val backgorundColor = if (isDark) Color.BLACK else Color.WHITE
+        val backgorundColor = if (isDark) getResources().getColor(R.color.light_black) else Color.WHITE
         val widgetColor = if (isDark) Color.WHITE else Color.BLACK
         println("A")
         for (child in parent.children) {
@@ -116,5 +119,54 @@ class MainActivity : AppCompatActivity(), IMainView {
         }
     }
 
+    override fun stopAlarm(position: Int) {
+        var pi = PendingIntent.getBroadcast(
+                this,
+                position,
+                Intent(AlarmReceiver.ALARM_ACTION_NAME).apply {
+                    `package` = packageName
+                },
+                0
+        )
+
+        var alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pi)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun startAlarm(position: Int) {
+        var intent = Intent(AlarmReceiver.ALARM_ACTION_NAME).apply {
+            `package` = packageName
+        }
+
+        intent.putExtra("asd", "sadd")
+
+        var pi = PendingIntent.getBroadcast(
+                this,
+                position,
+                intent,
+                0
+        )
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        var today =  sdf.format(Date()) + " "
+
+
+        var dateTimeStr = today+presenter.getAlarms()[position].toString()
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val dateTime: LocalDateTime? = LocalDateTime.parse(dateTimeStr, formatter)
+
+        val nowInMillis = ((dateTime?.toEpochSecond(ZoneOffset.UTC)?.times(1000) ?: 0)
+                + (dateTime?.get(ChronoField.MILLI_OF_SECOND) ?: 0)) / 60
+
+
+        var alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, nowInMillis-System.currentTimeMillis(), pi)
+    }
+
+    companion object {
+        const val ALARM_REQUEST_CODE = 344
+    }
 
 }

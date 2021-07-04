@@ -7,4 +7,6 @@ interface IMainPresenter {
     fun addAlarm(alarm: Alarm)
     fun getAlarms(): List<Alarm>
     fun switchAlarmOnIndex(i: Int)
+    fun startAlarm(position: Int)
+    fun stopAlarm(position: Int)
 }

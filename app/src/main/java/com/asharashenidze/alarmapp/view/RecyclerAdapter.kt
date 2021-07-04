@@ -32,9 +32,9 @@ class RecyclerAdapter(var alarmList: List<Alarm>, var presenter: MainPresenter):
         holder.itemSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             presenter.switchAlarmOnIndex(position)
             if (isChecked) {
-                println("OOOOOOOOOOOOOON" + position)
+                presenter.startAlarm(position)
             } else {
-                println("OOOOFFFFFF" + + position)
+                presenter.stopAlarm(position)
             }
         }
     }

@@ -1,13 +1,23 @@
 package com.asharashenidze.alarmapp.model
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.asharashenidze.alarmapp.presenter.IMainPresenter
 import com.asharashenidze.alarmapp.utils.Theme
 
-class MainInteractor(val presenter: IMainPresenter) {
+class MainInteractor(val context: Context, val presenter: IMainPresenter) {
 
     private var currentTheme: Theme? = null
 
     private var alarmList: List<Alarm> = mutableListOf(Alarm(12, 23, true))
+
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences("data",Context.MODE_PRIVATE)
+
+    lateinit var editor: SharedPreferences.Editor
+
+    fun MainInteractor() {
+        editor = sharedPreferences.edit()
+    }
 
     fun getCurrentTheme(): Theme? {
         return currentTheme
@@ -22,6 +32,7 @@ class MainInteractor(val presenter: IMainPresenter) {
     }
 
     fun addAlarm(alarm: Alarm) {
+        print(alarm.hour)
         alarmList += alarm
     }
 
