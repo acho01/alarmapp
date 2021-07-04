@@ -2,7 +2,9 @@ package com.asharashenidze.alarmapp
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
@@ -42,6 +44,8 @@ class MainActivity : AppCompatActivity(), IMainView {
 
     private lateinit var presenter: MainPresenter
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     private var TO_DARK = "Switch to dark"
 
     private var TO_LIGHT = "Switch to light"
@@ -53,7 +57,9 @@ class MainActivity : AppCompatActivity(), IMainView {
         var recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = layoutManager
 
-        presenter = MainPresenter(this, this)
+        sharedPreferences = this.getSharedPreferences("data", Context.MODE_PRIVATE)
+
+        presenter = MainPresenter(sharedPreferences, this)
         adapter = RecyclerAdapter(presenter.getAlarms(), presenter)
         recyclerView.adapter = adapter
 
@@ -154,11 +160,18 @@ class MainActivity : AppCompatActivity(), IMainView {
 
         var dateTimeStr = today+presenter.getAlarms()[position].toString()
 
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        val dateTime: LocalDateTime? = LocalDateTime.parse(dateTimeStr, formatter)
+        var millis = System.currentTimeMillis()
 
-        val nowInMillis = ((dateTime?.toEpochSecond(ZoneOffset.UTC)?.times(1000) ?: 0)
-                + (dateTime?.get(ChronoField.MILLI_OF_SECOND) ?: 0)) / 60
+        val nowInMillis = try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val dateTime: LocalDateTime? = LocalDateTime.parse(dateTimeStr, formatter)
+
+            ((dateTime?.toEpochSecond(ZoneOffset.UTC)?.times(1000) ?: 0)
+                    + (dateTime?.get(ChronoField.MILLI_OF_SECOND) ?: 0)) / 60
+        } catch (e: Exception) {
+            System.currentTimeMillis()
+        }
+
 
 
         var alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager

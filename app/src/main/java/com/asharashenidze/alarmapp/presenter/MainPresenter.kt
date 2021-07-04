@@ -1,14 +1,15 @@
 package com.asharashenidze.alarmapp.presenter
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.asharashenidze.alarmapp.model.Alarm
 import com.asharashenidze.alarmapp.model.MainInteractor
 import com.asharashenidze.alarmapp.utils.Theme
 import com.asharashenidze.alarmapp.view.IMainView
 
-class MainPresenter(var context: Context, var view: IMainView?) : IMainPresenter{
+class MainPresenter(var sharedPreferences: SharedPreferences, var view: IMainView?) : IMainPresenter{
 
-    private val interactor = MainInteractor( context,this)
+    private val interactor = MainInteractor( sharedPreferences,this)
 
     override fun updateTheme() {
         var currentTheme = getCurrentTheme()
