@@ -160,9 +160,7 @@ class MainActivity : AppCompatActivity(), IMainView {
 
         var dateTimeStr = today+presenter.getAlarms()[position].toString()
 
-        var millis = System.currentTimeMillis()
-
-        val nowInMillis = try {
+        var nowInMillis = try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             val dateTime: LocalDateTime? = LocalDateTime.parse(dateTimeStr, formatter)
 
@@ -175,7 +173,7 @@ class MainActivity : AppCompatActivity(), IMainView {
 
 
         var alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, nowInMillis-System.currentTimeMillis(), pi)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi)
     }
 
     companion object {

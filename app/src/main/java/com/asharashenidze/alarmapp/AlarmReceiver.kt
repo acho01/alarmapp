@@ -35,7 +35,7 @@ class AlarmReceiver : BroadcastReceiver(){
                 Notification.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.alarm_clock)
                     .setContentTitle("Your Alarm")
-                    .setContentText("Alarm set on ${time}")
+                    .setContentText("Alarm set on ${time}, pops up immediately for testing purposes")
                         .addAction(R.mipmap.ic_launcher, "Cancel", notificationCancelIntent)
                         .addAction(R.mipmap.ic_launcher, "Snooze", notificationSnoozeIntent)
                         .build()
